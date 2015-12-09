@@ -6,13 +6,13 @@
  korzysta ze scrollingu przez RasInfo
 */
 
-#include "types.h"
-#include "macros.h"
-#include "config.h"
+#include "ACE:types.h"
+#include "ACE:macros.h"
+#include "ACE:config.h"
 
-#include "utils/bitmap.h"
-#include "utils/extview.h"
-#include "managers/viewport/camera.h"
+#include "ACE:utils/bitmap.h"
+#include "ACE:utils/extview.h"
+#include "ACE:managers/viewport/camera.h"
 
 typedef struct {
 	tVpManager sCommon;

@@ -5,8 +5,8 @@
 #include <clib/exec_protos.h>
 /* #include <clib/graphics_protos.h> // BitMap etc */
 
-#include "config.h"
-#include "utils/extview.h"
+#include "ACE:config.h"
+#include "ACE:utils/extview.h"
 
 /* Types */
 #define BLIT_DEFAULT 0xC0, 0xFF, 0

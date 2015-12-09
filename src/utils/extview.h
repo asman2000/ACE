@@ -4,10 +4,10 @@
 #include <clib/exec_protos.h>
 #include <clib/graphics_protos.h>
 
-#include "config.h"
-#include "managers/log.h"
-#include "managers/memory.h"
-#include "managers/copper.h"
+#include "ACE:config.h"
+#include "ACE:managers/log.h"
+#include "ACE:managers/memory.h"
+#include "ACE:managers/copper.h"
 
 /* Types */
 

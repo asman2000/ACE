@@ -8,11 +8,17 @@
 #include <clib/graphics_protos.h>
 #include <graphics/gfxbase.h>
 
-#include "config.h"
+#include "ACE:config.h"
 
+<<<<<<< HEAD
 #include "utils/extview.h"
 #include "managers/log.h"
 #include "managers/memory.h"
+=======
+#include "ACE:utils/extview.h" // tExtView
+#include "ACE:managers/log.h"
+#include "ACE:managers/memory.h"
+>>>>>>> parent of 09efc90... added makefile.vbcc and removed ACE: from files
 
 #define CPR_SEEK_CUR 0
 #define CPR_SEEK_SET 1

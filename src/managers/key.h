@@ -4,9 +4,9 @@
 #include <clib/exec_protos.h>
 #include <clib/intuition_protos.h>
 
-#include "config.h"
+#include "ACE:config.h"
 
-#include "managers/window.h"
+#include "ACE:managers/window.h"
 
 /* Types */
 #define KEY_ESCAPE 0x45

@@ -3,9 +3,9 @@
 
 #include <clib/exec_protos.h>
 
-#include "config.h"
-#include "managers/blit.h"
-#include "utils/bitmap.h"
+#include "ACE:config.h"
+#include "ACE:managers/blit.h"
+#include "ACE:utils/bitmap.h"
 
 /* Types */
 #define FONT_LEFT    0

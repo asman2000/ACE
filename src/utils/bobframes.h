@@ -3,9 +3,9 @@
 
 #include <clib/exec_protos.h>
 
-#include "managers/log.h"
-#include "managers/memory.h"
-#include "utils/bitmap.h"
+#include "ACE:managers/log.h"
+#include "ACE:managers/memory.h"
+#include "ACE:utils/bitmap.h"
 
 #define BOBFRAMES_BPP 5
 

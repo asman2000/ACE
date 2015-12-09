@@ -3,13 +3,13 @@
 
 #include <clib/exec_protos.h>
 
-#include "config.h"
+#include "ACE:config.h"
 
-#include "managers/timer.h"
-#include "managers/key.h"
-#include "managers/window.h"
+#include "ACE:managers/timer.h"
+#include "ACE:managers/key.h"
+#include "ACE:managers/window.h"
 
-#include "utils/extview.h"
+#include "ACE:utils/extview.h"
 
 /* Types */
 

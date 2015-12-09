@@ -5,7 +5,7 @@
 #include <clib/exec_protos.h>
 #include <exec/memory.h>
 
-#include "config.h"
+#include "ACE:config.h"
 
 /* Types */
 

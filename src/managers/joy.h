@@ -3,7 +3,7 @@
 
 #include <clib/exec_protos.h>
 
-#include "config.h"
+#include "ACE:config.h"
 
 /* Types */
 #define JPORT1 1
