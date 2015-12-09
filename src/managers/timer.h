@@ -1,9 +1,9 @@
 #ifndef GUARD_ACE_MANAGER_TIMER_H
 #define GUARD_ACE_MANAGER_TIMER_H
 
-#include <clib/exec_protos.h> // Amiga typedefs
-#include <exec/interrupts.h>  // struct Interrupt
-#include <hardware/intbits.h> // INTB_VERTB
+#include <clib/exec_protos.h>
+#include <exec/interrupts.h>
+#include <hardware/intbits.h>
 
 #include "config.h"
 #include "managers/memory.h"
@@ -18,11 +18,11 @@
  * and still calling timerProcess during pause loop
  */
 typedef struct {
-	struct Interrupt *pInt; /// Must be PUBLIC memory
-	ULONG ulGameTicks;      /// Actual ticks passed in game
-	ULONG ulLastTime;       /// Internal - used to update ulGameTicks
-	UWORD uwFrameCounter;   /// Incremented by VBlank interrupt
-	UBYTE ubPaused;         /// 1: pause on
+	struct Interrupt *pInt; /* Must be PUBLIC memory */
+	ULONG ulGameTicks;      /* Actual ticks passed in game */
+	ULONG ulLastTime;       /* Internal - used to update ulGameTicks */
+	UWORD uwFrameCounter;   /* Incremented by VBlank interrupt */
+	UBYTE ubPaused;         /* 1: pause on */
 } tTimerManager;
 
 /* Globals */

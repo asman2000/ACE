@@ -4,7 +4,7 @@
 
 /* Functions */
 
-// AllocBitMap nie dzia³a na kick 1.3
+/* AllocBitMap nie dzia³a na kick 1.3 */
 tBitMap *bitmapCreate(UWORD uwWidth, UWORD uwHeight, UBYTE ubDepth, UBYTE ubFlags) {
 	tBitMap *pBitMap;
 	UBYTE i;
@@ -44,9 +44,9 @@ tBitMap *bitmapCreate(UWORD uwWidth, UWORD uwHeight, UBYTE ubDepth, UBYTE ubFlag
 tBitMap *bitmapCreateFromFile(char *szFileName) {
 	tBitMap *pBitMap;
 	FILE *pFile;
-	UWORD uwWidth, uwHeight;            // wymiary obrazka
-	UWORD uwCopperLength, uwCopperSize; // copperlista - raczej niepotrzebne, usun¹æ póŸniej ze specyfikacji pliku
-	UBYTE ubPlaneCount;                 // liczba bitplanesów
+	UWORD uwWidth, uwHeight;            /* wymiary obrazka */
+	UWORD uwCopperLength, uwCopperSize; /* copperlista - raczej niepotrzebne, usun¹æ póŸniej ze specyfikacji pliku */
+	UBYTE ubPlaneCount;                 /* liczba bitplanesów */
 	UBYTE i;
 	
 	logBlockBegin("bitmapCreateFromFile(szFileName: %s)", szFileName);
@@ -58,14 +58,14 @@ tBitMap *bitmapCreateFromFile(char *szFileName) {
 	}
 	logWrite("Addr: %p\n",pBitMap);
 	
-	// Nag³ówek
+	/* Nag³ówek */
 	fread(&uwWidth, 2, 1, pFile);
 	fread(&uwHeight, 2, 1, pFile);
 	fread(&ubPlaneCount, 1, 1, pFile);
 	fread(&uwCopperLength, 2, 1, pFile);
 	fread(&uwCopperSize, 2, 1, pFile);
 	
-	// Init bitmapy
+	/* Init bitmapy */
 	pBitMap = bitmapCreate(uwWidth, uwHeight, ubPlaneCount, 0);
 	for (i = 0; i != ubPlaneCount; ++i)
 		fread(pBitMap->Planes[i], 1, (uwWidth >> 3) * uwHeight, pFile);

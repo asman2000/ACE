@@ -4,7 +4,7 @@
 #include "utils/bitmap.h"
 #include "managers/blit.h"
 
-// defines for offsets of tiles in frame file
+/* defines for offsets of tiles in frame file */
 
 #define FRAMETILE_NW 0,0
 #define FRAMETILE_N 16,0

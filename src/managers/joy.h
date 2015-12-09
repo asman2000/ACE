@@ -1,7 +1,7 @@
 #ifndef GUARD_ACE_MANAGER_JOY_H
 #define GUARD_ACE_MANAGER_JOY_H
 
-#include <clib/exec_protos.h> // Amiga typedefs
+#include <clib/exec_protos.h>
 
 #include "config.h"
 
@@ -12,32 +12,32 @@
 #define JOYADDR2 ((WORD *) (0xdff008 + 2 * JPORT2))
 #define CIAADDR ((UBYTE *) 0xbfe001)
 
-// enum sux cuz is using 16/32bit int
-// typedef enum {
-	// JOY1_FIRE,
-	// JOY1_UP,
-	// JOY1_DOWN,
-	// JOY1_LEFT,
-	// JOY1_RIGHT,
+/* enum sux cuz is using 16/32bit int */
+/* typedef enum { */
+	/* JOY1_FIRE, */
+	/* JOY1_UP, */
+	/* JOY1_DOWN, */
+	/* JOY1_LEFT, */
+	/* JOY1_RIGHT, */
 
-	// JOY2_FIRE,
-	// JOY2_UP,
-	// JOY2_DOWN,
-	// JOY2_LEFT,
-	// JOY2_RIGHT,
+	/* JOY2_FIRE, */
+	/* JOY2_UP, */
+	/* JOY2_DOWN, */
+	/* JOY2_LEFT, */
+	/* JOY2_RIGHT, */
 
-	// JOY3_FIRE,
-	// JOY3_UP,
-	// JOY3_DOWN,
-	// JOY3_LEFT,
-	// JOY3_RIGHT,
+	/* JOY3_FIRE, */
+	/* JOY3_UP, */
+	/* JOY3_DOWN, */
+	/* JOY3_LEFT, */
+	/* JOY3_RIGHT, */
 
-	// JOY4_FIRE,
-	// JOY4_UP,
-	// JOY4_DOWN,
-	// JOY4_LEFT,
-	// JOY4_RIGHT
-// } tJoyCode;
+	/* JOY4_FIRE, */
+	/* JOY4_UP, */
+	/* JOY4_DOWN, */
+	/* JOY4_LEFT, */
+	/* JOY4_RIGHT */
+/* } tJoyCode; */
 
 #define JOY1_FIRE 0
 #define JOY1_UP 1
@@ -63,7 +63,7 @@
 #define JOY4_LEFT 18
 #define JOY4_RIGHT 19
 
-// Combined access: JOYn + JOY_action
+/* Combined access: JOYn + JOY_action */
 #define JOY_FIRE 0
 #define JOY_UP 1
 #define JOY_DOWN 2
@@ -75,12 +75,12 @@
 #define JOY3 10
 #define JOY4 15
 
-// enum sux cuz is using 16/32bit int
-// typedef enum {
-	// JOY_NACTIVE,
-	// JOY_USED,
-	// JOY_ACTIVE,
-// } tJoyState;
+/* enum sux cuz is using 16/32bit int */
+/* typedef enum { */
+	/* JOY_NACTIVE, */
+	/* JOY_USED, */
+	/* JOY_ACTIVE, */
+/* } tJoyState; */
 
 #define JOY_NACTIVE 0
 #define JOY_USED 1
@@ -112,14 +112,14 @@ void joyProcess(void);
 
 void joyClose(void);
 
-extern LONG getport(void); // Get parallel port access
+extern LONG getport(void); /* Get parallel port access */
 
-extern void freeport(void); // Free parallel port access
+extern void freeport(void); /* Free parallel port access */
 
-extern UBYTE rdport(void); // Read port data
+extern UBYTE rdport(void); /* Read port data */
 
-extern UBYTE rdbusy(void); // Read BUSY state (0/1)
+extern UBYTE rdbusy(void); /* Read BUSY state (0/1) */
 
-extern UBYTE rdsel(void); // Read SEL state (0/1)
+extern UBYTE rdsel(void); /* Read SEL state (0/1) */
 
 #endif

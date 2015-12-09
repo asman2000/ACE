@@ -6,7 +6,7 @@
  * Moved to separate file cuz multiple pasting of extern custom is messy
  */
 
-#include <hardware/custom.h> // Custom chip register addresses
+#include <hardware/custom.h>
 
 __far extern struct Custom custom;
 
@@ -15,10 +15,10 @@ __far extern struct Custom custom;
  * Merges vposr and vhposr read into one
  */
 typedef struct {
-	unsigned ubLaced:1;   /// 1 for interlaced screens
+	unsigned ubLaced:1;   /* 1 for interlaced screens */
 	unsigned uwUnused:14;
-	unsigned uwPosY:9;    /// PAL: 0..312, NTSC: 0..?
-	unsigned ubPosX:8;    /// 0..159?
+	unsigned uwPosY:9;    /* PAL: 0..312, NTSC: 0..? */
+	unsigned ubPosX:8;    /* 0..159? */
 } tRayPos;
 
 extern tRayPos * const vhPosRegs;
@@ -30,8 +30,8 @@ extern tRayPos * const vhPosRegs;
  */
  
 typedef struct {
-	UWORD uwHi; /// upper WORD of bitplane address
-	UWORD uwLo; /// lower WORD of bitplane address
+	UWORD uwHi; /* upper WORD of bitplane address */
+	UWORD uwLo; /* lower WORD of bitplane address */
 } tBitplanePtr;
 
 extern tBitplanePtr * const pBplPtrs;

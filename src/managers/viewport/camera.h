@@ -16,9 +16,9 @@
 typedef struct {
 	tVpManager sCommon;
 
-	tUwCoordYX uPos;      /// Current camera pos
-	tUwCoordYX uLastPos;  /// Previous camera pos
-	tUwCoordYX uMaxPos;   /// Max camera pos: world W&H - camera W&H
+	tUwCoordYX uPos;      /* Current camera pos */
+	tUwCoordYX uLastPos;  /* Previous camera pos */
+	tUwCoordYX uMaxPos;   /* Max camera pos: world W&H - camera W&H */
 } tCameraManager;
 
 tCameraManager *cameraCreate(

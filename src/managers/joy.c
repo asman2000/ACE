@@ -26,7 +26,8 @@ UBYTE joyUse(UBYTE ubJoyCode) {
 
 void joyProcess() {
 	UBYTE ubParData = rdport();
-	UWORD pJoyLookup[] = {
+	UWORD pJoyLookup[] = { 0 
+	/*
 		!(*CIAADDR & (64 * JPORT2)),        // Joy 1 fire  (PORT 2)
 		(*JOYADDR2 >> 1 ^ *JOYADDR2) & 256, // Joy 1 up    (PORT 2)
 		(*JOYADDR2 >> 1 ^ *JOYADDR2) & 1,   // Joy 1 down  (PORT 2)
@@ -50,7 +51,11 @@ void joyProcess() {
 		!(ubParData & 32),                  // Joy 4 down
 		!(ubParData & 64),                  // Joy 4 left
 		!(ubParData & 128),                 // Joy 4 right
+	
+	*/
+
 	};
+
 	UBYTE ubJoyCode = 20;
 
 	while (ubJoyCode--)

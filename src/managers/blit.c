@@ -12,7 +12,7 @@ inline void blitSetRegs(tBlitData *pData) {
 
 	custom.bltafwm = pData->bltafwm;
 	custom.bltalwm = pData->bltalwm;
-	// shift & mask before ptr & data
+	/* shift & mask before ptr & data */
 
 	custom.bltcmod = pData->bltcmod;
 	custom.bltbmod = pData->bltbmod;
@@ -29,7 +29,7 @@ inline void blitSetRegs(tBlitData *pData) {
 	custom.bltdpt  = pData->bltdpt;
 
 	custom.bltsize = pData->bltsize;
-	// TODO: zamiana na copymemy dopiero jak wszystko inne bêdzie dzia³aæ
+	/* TODO: zamiana na copymemy dopiero jak wszystko inne bêdzie dzia³aæ */
 }
 
 /**
@@ -39,7 +39,7 @@ inline void blitSetRegs(tBlitData *pData) {
  */
 __amigainterrupt __saveds void blitInterruptHandler(__reg("a0") struct Custom *cstm, __reg("a1") tBlitManager *pBlitManager) {
 	if(pBlitManager->ubBlitStarted) {
-		// If triggered by blit from queue => clear blit size and move to next blit
+		/* If triggered by blit from queue => clear blit size and move to next blit */
 		pBlitManager->ubBlitStarted = 0;
 		pBlitManager->pBlitData[pBlitManager->uwBlitPos].bltdpt = 0;
 
@@ -49,15 +49,17 @@ __amigainterrupt __saveds void blitInterruptHandler(__reg("a0") struct Custom *c
 		}
 	}
 	
+	{
 	tBlitData *pData;
 	pData = &pBlitManager->pBlitData[pBlitManager->uwBlitPos];
 	
 	if(pData->bltdpt) {
-		// If next blit in queue has non-zero size => process it
+		/* If next blit in queue has non-zero size => process it */
 		blitSetRegs(pData);
 		pBlitManager->ubBlitStarted = 1;
 	}
 	cstm->intreq = INTF_BLIT;
+	}
 }
 
 /**
@@ -72,22 +74,22 @@ void blitQueueWait(void) {
 void blitQueueEnable(UWORD uwQueueLength) {
 	logBlockBegin("blitQueueEnable");
 	
-	// Set manager fields
+	/* Set manager fields */
 	g_sBlitManager.uwQueueLength = uwQueueLength;
 	g_sBlitManager.pBlitterSetFn = blitQueued;
 	g_sBlitManager.pBlitData = memAllocFastClear(sizeof(tBlitData) * uwQueueLength);
 	g_sBlitManager.szHandlerName = memAllocFast(17);
 	strcpy(g_sBlitManager.szHandlerName, "ACE Blit Manager");
 	
-	// Interrupt struct setup
-	g_sBlitManager.pInt = memAllocChipClear(sizeof(struct Interrupt)); // CHIP is PUBLIC
+	/* Interrupt struct setup */
+	g_sBlitManager.pInt = memAllocChipClear(sizeof(struct Interrupt)); /* CHIP is PUBLIC */
 	g_sBlitManager.pInt->is_Node.ln_Type = NT_INTERRUPT;
 	g_sBlitManager.pInt->is_Node.ln_Pri = 10;
 	g_sBlitManager.pInt->is_Node.ln_Name = g_sBlitManager.szHandlerName;
 	g_sBlitManager.pInt->is_Data = &g_sBlitManager;
 	g_sBlitManager.pInt->is_Code = blitInterruptHandler;
 	
-	// Enable interrupt handler
+	/* Enable interrupt handler */
 	g_sBlitManager.pPrevInt = SetIntVector(INTB_BLIT, g_sBlitManager.pInt);
 	g_sBlitManager.uwOldDmaCon = custom.dmaconr;
 	g_sBlitManager.uwOldIntEna = custom.intenar;
@@ -102,11 +104,11 @@ void blitQueueEnable(UWORD uwQueueLength) {
 void blitQueueDisable(void) {
 	
 	logBlockBegin("blitQueueDisable");
-	// Wait for all blits to finish
+	/* Wait for all blits to finish */
 	blitQueueWait();
-	// Disable queue
+	/* Disable queue */
 	if(g_sBlitManager.uwQueueLength) {
-		// Remove interrupt handler
+		/* Remove interrupt handler */
 		custom.intena = 0x7FFF;
 		custom.dmacon = 0x7FFF;
 		custom.intreq = 0x7FFF;
@@ -114,7 +116,7 @@ void blitQueueDisable(void) {
 		custom.dmacon = g_sBlitManager.uwOldDmaCon | 0x8000;
 		SetIntVector(INTB_BLIT, g_sBlitManager.pPrevInt);
 		logWrite("int ok\n");
-		// Cleanup
+		/* Cleanup */
 		memFree(g_sBlitManager.pInt, sizeof(struct Interrupt));
 		memFree(g_sBlitManager.szHandlerName, 17);
 		memFree(g_sBlitManager.pBlitData, sizeof(tBlitData) * g_sBlitManager.uwQueueLength);
@@ -246,7 +248,7 @@ void blitQueued(
 	UWORD bltadat, UWORD bltbdat, UWORD bltcdat,
 	UWORD bltsize
 ) {
-	// Add new entry to blitter queue
+	/* Add new entry to blitter queue */
 	tBlitData *pData = &g_sBlitManager.pBlitData[g_sBlitManager.uwAddPos];
 	
 	pData->bltamod = bltamod;
@@ -269,19 +271,19 @@ void blitQueued(
 	pData->bltbdat = bltbdat;
 	pData->bltadat = bltadat;
 	
-	// logWrite("Added blit pos %u: pt: %p %p %p %p\n", g_sBlitManager.uwAddPos, bltapt, bltbpt, bltcpt, bltdpt);
+	/* logWrite("Added blit pos %u: pt: %p %p %p %p\n", g_sBlitManager.uwAddPos, bltapt, bltbpt, bltcpt, bltdpt); */
 	
-	// Execute blit if all queue entries were processed
+	/* Execute blit if all queue entries were processed */
 	if(g_sBlitManager.uwBlitPos == g_sBlitManager.uwAddPos) {
 		while(!blitIsIdle())
 			WaitBlit();
-		// if(blitIsIdle()) {
+		/* if(blitIsIdle()) { */
 				OwnBlitter();
-				// logWrite("Blitter is idle - starting blit\n");
+				/* logWrite("Blitter is idle - starting blit\n"); */
 				blitSetRegs(pData);
 				DisownBlitter();
 				g_sBlitManager.ubBlitStarted = 1;
-		// }
+		/* } */
 	}
 	
 	++g_sBlitManager.uwAddPos;
@@ -309,10 +311,10 @@ BYTE blitUnsafeCopy(
 	tBitMap *pDst, WORD wDstX, WORD wDstY, WORD wWidth, WORD wHeight,
 	UBYTE ubMinterm, UBYTE ubMask
 ) {
-	// Helper vars
+	/* Helper vars */
 	UWORD uwBlitWords, uwBlitWidth, uwSrcOffs, uwDstOffs;
 	UBYTE ubShift, ubSrcDelta, ubDstDelta, ubWidthDelta, ubMaskFShift, ubMaskLShift, ubPlane;
-	// Blitter register values
+	/* Blitter register values */
 	UWORD uwBltCon0, uwBltCon1, uwFirstMask, uwLastMask;
 	WORD wSrcModulo, wDstModulo;
 		
@@ -328,7 +330,7 @@ BYTE blitUnsafeCopy(
 		ubMaskLShift = uwBlitWidth - (wWidth+ubMaskFShift);
 		uwFirstMask = 0xFFFF << ubMaskFShift;
 		uwLastMask = 0xFFFF >> ubMaskLShift;
-		if(ubMaskLShift > 16) // Fix for 2-word blits
+		if(ubMaskLShift > 16) /* Fix for 2-word blits */
 			uwFirstMask &= 0xFFFF >> (ubMaskLShift-16);
 		
 		ubShift = uwBlitWidth - (ubDstDelta+wWidth+ubMaskFShift);
@@ -363,15 +365,15 @@ BYTE blitUnsafeCopy(
 	while(ubMask) {
 		if(ubMask & 1)
 			g_sBlitManager.pBlitterSetFn(
-				uwBltCon0, uwBltCon1,                  // bltconX
-				uwFirstMask, uwLastMask,               // bltaXwm
-				0, wSrcModulo, wDstModulo, wDstModulo, // bltXmod
-				0,                                     // bltapt
-				pSrc->Planes[ubPlane] + uwSrcOffs,     // bltbpt
-				pDst->Planes[ubPlane] + uwDstOffs,     // bltcpt
-				pDst->Planes[ubPlane] + uwDstOffs,     // bltdpt
-				0xFFFF, 0, 0,                          // bltXdat
-				(wHeight << 6) | uwBlitWords           // bltsize
+				uwBltCon0, uwBltCon1,                  /* bltconX */
+				uwFirstMask, uwLastMask,               /* bltaXwm */
+				0, wSrcModulo, wDstModulo, wDstModulo, /* bltXmod */
+				0,                                     /* bltapt */
+				pSrc->Planes[ubPlane] + uwSrcOffs,     /* bltbpt */
+				pDst->Planes[ubPlane] + uwDstOffs,     /* bltcpt */
+				pDst->Planes[ubPlane] + uwDstOffs,     /* bltdpt */
+				0xFFFF, 0, 0,                          /* bltXdat */
+				(wHeight << 6) | uwBlitWords           /* bltsize */
 			);
 		ubMask >>= 1;
 		++ubPlane;
@@ -416,14 +418,14 @@ BYTE blitUnsafeCopyAligned(
 		wHeight *= pSrc->Depth;
 		
 		g_sBlitManager.pBlitterSetFn(
-			uwBltCon0, 0,                 // bltconX
-			0xFFFF, 0xFFFF,               // bltaXwm
-			wSrcModulo, 0, 0, wDstModulo, // bltXmod
-			pSrc->Planes[0] + uwSrcOffs,  // bltapt
-			0, 0,                         // bltbpt, bltcpt
-			pDst->Planes[0] + uwDstOffs,  // bltdpt
-			0, 0, 0,                      // bltXdat
-			(wHeight << 6) | uwBlitWords  // bltsize
+			uwBltCon0, 0,                 /* bltconX */
+			0xFFFF, 0xFFFF,               /* bltaXwm */
+			wSrcModulo, 0, 0, wDstModulo, /* bltXmod */
+			pSrc->Planes[0] + uwSrcOffs,  /* bltapt */
+			0, 0,                         /* bltbpt, bltcpt */
+			pDst->Planes[0] + uwDstOffs,  /* bltdpt */
+			0, 0, 0,                      /* bltXdat */
+			(wHeight << 6) | uwBlitWords  /* bltsize */
 		);
 	}
 	else {		
@@ -434,14 +436,14 @@ BYTE blitUnsafeCopyAligned(
 		
 		for(ubPlane = pSrc->Depth; ubPlane--;) {
 			g_sBlitManager.pBlitterSetFn(
-				uwBltCon0, 0,                      // bltconX
-				0xFFFF, 0xFFFF,                    // bltaXwm
-				wSrcModulo, 0, 0, wDstModulo,      // bltXmod
-				pSrc->Planes[ubPlane] + uwSrcOffs, // bltapt
-				0, 0,                              // bltbpt, bltcpt
-				pDst->Planes[ubPlane] + uwDstOffs, // bltdpt
-				0, 0, 0,                           // bltXdat
-				(wHeight << 6) | uwBlitWords       // bltsize
+				uwBltCon0, 0,                      /* bltconX */
+				0xFFFF, 0xFFFF,                    /* bltaXwm */
+				wSrcModulo, 0, 0, wDstModulo,      /* bltXmod */
+				pSrc->Planes[ubPlane] + uwSrcOffs, /* bltapt */
+				0, 0,                              /* bltbpt, bltcpt */
+				pDst->Planes[ubPlane] + uwDstOffs, /* bltdpt */
+				0, 0, 0,                           /* bltXdat */
+				(wHeight << 6) | uwBlitWords       /* bltsize */
 			);
 		}
 	}	
@@ -500,19 +502,19 @@ BYTE blitUnsafeCopyMask(
 	
 	for(ubPlane = pSrc->Depth; ubPlane--;) {
 		g_sBlitManager.pBlitterSetFn(
-			// BltCon & Masks
+			/* BltCon & Masks */
 			uwBltCon0, uwBltCon1,
 			uwFirstMask, uwLastMask,
-			// Modulos
-			wSrcModulo, wSrcModulo, wDstModulo, wDstModulo, // A, B, C, D
-			// Channel ptrs - w byte'ach, blitter ignoruje najmniej znacz¹cy bit i robi parzyste adresy
-			((UBYTE *)pMsk) + uwSrcOffs,                    // custom.bltapt
-			((UBYTE *)(pSrc->Planes[ubPlane])) + uwSrcOffs, // custom.bltbpt
-			((UBYTE *)(pDst->Planes[ubPlane])) + uwDstOffs, // custom.bltcpt
-			((UBYTE *)(pDst->Planes[ubPlane])) + uwDstOffs, // custom.bltdpt
-			0, 0, 0,                                        // custom.bltXdat
-			// BLTSIZE
-			(wHeight << 6) | uwBlitWords // custom.bltsize
+			/* Modulos */
+			wSrcModulo, wSrcModulo, wDstModulo, wDstModulo, /* A, B, C, D */
+			/* Channel ptrs - w byte'ach, blitter ignoruje najmniej znacz¹cy bit i robi parzyste adresy */
+			((UBYTE *)pMsk) + uwSrcOffs,                    /* custom.bltapt */
+			((UBYTE *)(pSrc->Planes[ubPlane])) + uwSrcOffs, /* custom.bltbpt */
+			((UBYTE *)(pDst->Planes[ubPlane])) + uwDstOffs, /* custom.bltcpt */
+			((UBYTE *)(pDst->Planes[ubPlane])) + uwDstOffs, /* custom.bltdpt */
+			0, 0, 0,                                        /* custom.bltXdat */
+			/* BLTSIZE */
+			(wHeight << 6) | uwBlitWords /* custom.bltsize */
 		);
 	}
 	return 1;
@@ -544,10 +546,11 @@ BYTE _blitRect(
 	if(!blitCheck(0,0,0,pDst, wDstX, wDstY, wWidth, wHeight, uwLine, szFile))
 		return 0;
 	
-	// Helper vars
+	{
+	/* Helper vars */
 	UWORD uwBlitWords, uwBlitWidth, uwDstOffs;
 	UBYTE ubDstDelta, ubMinterm, ubPlane;
-	// Blitter register values
+	/* Blitter register values */
 	UWORD uwBltCon0, uwBltCon1, uwFirstMask, uwLastMask;
 	WORD wSrcModulo, wDstModulo;
 		
@@ -569,17 +572,18 @@ BYTE _blitRect(
 		else
 			ubMinterm = 0x0A;
 		g_sBlitManager.pBlitterSetFn(
-			uwBltCon0 | ubMinterm, uwBltCon1,      // bltconX
-			uwFirstMask, uwLastMask,               // bltaXwm
-			0, 0, wDstModulo, wDstModulo,          // bltXmod
-			0, 0,                                  // bltapt, bltbpt
-			pDst->Planes[ubPlane] + uwDstOffs,     // bltcpt
-			pDst->Planes[ubPlane] + uwDstOffs,     // bltdpt
-			0xFFFF, 0, 0,                          // bltXdat
-			(wHeight << 6) | uwBlitWords           // bltsize
+			uwBltCon0 | ubMinterm, uwBltCon1,      /* bltconX */
+			uwFirstMask, uwLastMask,               /* bltaXwm */
+			0, 0, wDstModulo, wDstModulo,          /* bltXmod */
+			0, 0,                                  /* bltapt, bltbpt */
+			pDst->Planes[ubPlane] + uwDstOffs,     /* bltcpt */
+			pDst->Planes[ubPlane] + uwDstOffs,     /* bltdpt */
+			0xFFFF, 0, 0,                          /* bltXdat */
+			(wHeight << 6) | uwBlitWords           /* bltsize */
 		);
 		ubColor >>= 1;
 		++ubPlane;
 	}	while(ubPlane != pDst->Depth);
+	}
 	return 1;
 }

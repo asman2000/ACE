@@ -1,9 +1,10 @@
 #include "camera.h"
 
 tCameraManager *cameraCreate(tVPort *pVPort, UWORD uwPosX, UWORD uwPosY, UWORD uwMaxX, UWORD uwMaxY) {
-	logBlockBegin("cameraCreate(pVPort: %p, uwPosX: %u, uwPosY: %u, uwMaxX: %u, uwMaxY: %u)", pVPort, uwPosX, uwPosY, uwMaxX, uwMaxY);
 	tCameraManager *pManager;
-	
+
+	logBlockBegin("cameraCreate(pVPort: %p, uwPosX: %u, uwPosY: %u, uwMaxX: %u, uwMaxY: %u)", pVPort, uwPosX, uwPosY, uwMaxX, uwMaxY);
+
 	pManager = memAllocFast(sizeof(tCameraManager));
 	logWrite("Addr: %p\n", pManager);
 	pManager->sCommon.pNext = 0;
@@ -16,7 +17,9 @@ tCameraManager *cameraCreate(tVPort *pVPort, UWORD uwPosX, UWORD uwPosY, UWORD u
 	
 	vPortAddManager(pVPort, (tVpManager*)pManager);
 	logBlockEnd("cameraCreate()");
+	
 	return pManager;
+
 }
 
 void cameraDestroy(tCameraManager *pManager) {
@@ -37,7 +40,7 @@ void cameraReset(tCameraManager *pManager, UWORD uwStartX, UWORD uwStartY, UWORD
 	pManager->uLastPos.sUwCoord.uwX = uwStartX;
 	pManager->uLastPos.sUwCoord.uwY = uwStartY;
 	
-	// Max camera coords based on viewport size
+	/* Max camera coords based on viewport size */
 	pManager->uMaxPos.sUwCoord.uwX = uwWidth - pManager->sCommon.pVPort->uwWidth;
 	pManager->uMaxPos.sUwCoord.uwY = uwHeight - pManager->sCommon.pVPort->uwHeight;	
 	logWrite("Camera max coord: %u,%u\n", pManager->uMaxPos.sUwCoord.uwX, pManager->uMaxPos.sUwCoord.uwY);
@@ -48,16 +51,16 @@ void cameraReset(tCameraManager *pManager, UWORD uwStartX, UWORD uwStartY, UWORD
 inline void cameraSetCoord(tCameraManager *pManager, UWORD uwX, UWORD uwY) {
 	pManager->uPos.sUwCoord.uwX = uwX;
 	pManager->uPos.sUwCoord.uwY = uwY;
-	// logWrite("New camera pos: %u,%u\n", uwX, uwY);
+	/* logWrite("New camera pos: %u,%u\n", uwX, uwY); */
 }
 
 void cameraMove(tCameraManager *pManager, WORD wX, WORD wY) {
 	WORD wTmp;
 	
-	// musz¹ byæ tutaj bo potem nie rozkminimy czy wynik jest ujemny,
-	// chyba ¿e tCoord bêdzie trzymaæ WORD zamiast UWORD
+	/* musz¹ byæ tutaj bo potem nie rozkminimy czy wynik jest ujemny,
+	 chyba ¿e tCoord bêdzie trzymaæ WORD zamiast UWORD */
 	wTmp = pManager->uPos.sUwCoord.uwX + wX;
-	if (wTmp > 0) { // Margines z lewej
+	if (wTmp > 0) { /* Margines z lewej */
 		pManager->uPos.sUwCoord.uwX = wTmp;
 		if (pManager->uPos.sUwCoord.uwX > pManager->uMaxPos.sUwCoord.uwX)
 			pManager->uPos.sUwCoord.uwX = pManager->uMaxPos.sUwCoord.uwX;
@@ -66,7 +69,7 @@ void cameraMove(tCameraManager *pManager, WORD wX, WORD wY) {
 		pManager->uPos.sUwCoord.uwX = 0;
 	
 	wTmp = pManager->uPos.sUwCoord.uwY + wY;
-	if (wTmp > 0) { // Margines z góry
+	if (wTmp > 0) { /* Margines z góry */
 		pManager->uPos.sUwCoord.uwY = wTmp;
 		if (pManager->uPos.sUwCoord.uwY > pManager->uMaxPos.sUwCoord.uwY)
 			pManager->uPos.sUwCoord.uwY = pManager->uMaxPos.sUwCoord.uwY;
@@ -80,7 +83,7 @@ void cameraCenterAt(tCameraManager *pManager, UWORD uwAvgX, UWORD uwAvgY) {
 	
 	pVPort = pManager->sCommon.pVPort;
 	
-	// Limit lewy górny
+	/* Limit lewy górny */
 	if(uwAvgX < pVPort->uwWidth>>1)
 		uwAvgX = 0;
 	else
@@ -91,7 +94,7 @@ void cameraCenterAt(tCameraManager *pManager, UWORD uwAvgX, UWORD uwAvgY) {
 	else
 		uwAvgY -= pVPort->uwHeight>>1;
 	
-	// Limit prawy dolny
+	/* Limit prawy dolny*/
 	if(uwAvgX > pManager->uMaxPos.sUwCoord.uwX)
 		uwAvgX = pManager->uMaxPos.sUwCoord.uwX;
 	if(uwAvgY > pManager->uMaxPos.sUwCoord.uwY)

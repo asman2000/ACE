@@ -17,7 +17,8 @@ void windowCreate() {
 		windowKill("Can't open Gfx Library!\n");
 	}
 		
-	// Screen to cover whole lores
+	/* Screen to cover whole lores */
+	{
 	struct NewScreen sScreen;
 	sScreen.LeftEdge = 0;
 	sScreen.TopEdge = 0;
@@ -36,10 +37,12 @@ void windowCreate() {
 	if (!(g_sWindowManager.pScreen = OpenScreen(&sScreen))) {
 		windowKill("Can't open Screen!\n");
 	}
+	}
 	
 	ShowTitle(g_sWindowManager.pScreen, 0);
 
-	// Window to cover whole screen - mouse hook
+	/* Window to cover whole screen - mouse hook */
+	{
 	struct NewWindow sWindow;
 	sWindow.LeftEdge = 0;
 	sWindow.TopEdge = 0;
@@ -64,13 +67,14 @@ void windowCreate() {
 		windowKill("Can't open Window!\n");
 	
 	g_sWindowManager.pSysView = GfxBase->ActiView;
-	
+	}
 	logBlockEnd("windowCreate");
 }
 
 void windowDestroy() {
 	logBlockBegin("windowDestroy()");
 	
+	/*
 	// logWrite("Restoring system view...");
 	// custom.cop1lc = (ULONG)GfxBase->copinit;
 	// custom.copjmp1 = 1;
@@ -78,6 +82,7 @@ void windowDestroy() {
 	// WaitTOF();
 	// WaitTOF();
 	// logWrite("OK\n");
+	*/
 	
 	logWrite("Closing intuition window...");
 	if (g_sWindowManager.pWindow)

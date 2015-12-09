@@ -15,9 +15,10 @@
  */
 #define blockCountFloor(length, blockSize) (length/blockSize)
 #define blockCountCeil(length, blockSize) ((length + blockSize-1)/blockSize)
- 
-/// Math
-// #define abs(x) (x<0 ? -x : x) // already implemented
 
+/* 
+ Math
+ #define abs(x) (x<0 ? -x : x) // already implemented
+*/
 
 #endif

@@ -9,10 +9,10 @@
  * TODO: disable checks when DEBUG is not set
  */
 
-#include <stdio.h> // FILE etc
+#include <stdio.h>
 
-#include <clib/exec_protos.h> // Amiga typedefs
-#include <clib/graphics_protos.h> // BitMap etc
+#include <clib/exec_protos.h>
+#include <clib/graphics_protos.h>
 
 #include "config.h"
 #include "managers/log.h"

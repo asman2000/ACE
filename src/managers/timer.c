@@ -19,7 +19,7 @@ __amigainterrupt __saveds void timerVBlankServer(__reg("a1") UWORD *pCounter) {
  */
 void timerCreate(void) {
 	g_sTimerManager.uwFrameCounter = 0;
-	g_sTimerManager.pInt = memAllocChipClear(sizeof(struct Interrupt)); // CHIP is PUBLIC.
+	g_sTimerManager.pInt = memAllocChipClear(sizeof(struct Interrupt)); /* CHIP is PUBLIC.*/
 	
 	g_sTimerManager.pInt->is_Node.ln_Type = NT_INTERRUPT;
 	g_sTimerManager.pInt->is_Node.ln_Pri = -60;
@@ -54,7 +54,7 @@ ULONG timerGet(void) {
  * Max time capacity: 1715s (28,5 min)
  */
 ULONG timerGetPrec(void) {
-	UWORD uwFr1, uwFr2; // frame counts
+	UWORD uwFr1, uwFr2; /* frame counts */
 	tRayPos sRay1, sRay2;
 	
 	uwFr1 = g_sTimerManager.uwFrameCounter;
@@ -123,7 +123,7 @@ void timerFormatPrec(char *szBfr, ULONG ulPrecTime) {
 		sprintf(szBfr, ">7min");
 		return;
 	}
-	// ulResult [us]
+	/* ulResult [us]*/
 	ulResult = ulPrecTime*4;
 	ulRest = ulResult % 10;
 	ulResult = ulResult / 10;
@@ -131,14 +131,14 @@ void timerFormatPrec(char *szBfr, ULONG ulPrecTime) {
 		sprintf(szBfr, "%3lu.%01lu us", ulResult, ulRest);
 		return;
 	}
-	// ulResult [ms]
+	/* ulResult [ms]*/
 	ulRest = ulResult % 1000;
 	ulResult /= 1000;
 	if(ulResult < 1000) {
 		sprintf(szBfr, "%3lu.%03lu ms", ulResult, ulRest);
 		return;
 	}
-	// ulResult [s]
+	/* ulResult [s]*/
 	ulRest = ulResult % 1000;
 	ulResult /= 1000;
 	sprintf(szBfr, "%lu.%03lu s", ulResult, ulRest);

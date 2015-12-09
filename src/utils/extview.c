@@ -4,12 +4,14 @@
  * Creates blank tView
  */
 tView *viewCreate(UWORD uwFlags) {
-	logBlockBegin("viewCreate(uwFlags: %u)", uwFlags);
 	
 	tView *pView = memAllocFast(sizeof(tView));
+	
+	logBlockBegin("viewCreate(uwFlags: %u)", uwFlags);
+	
 	logWrite("addr: %p\n", pView);
 	
-	// Fill fields
+	/* Fill fields */
 	pView->ubVpCount = 0;
 	pView->uwFlags = uwFlags;
 	pView->pFirstVPort = 0;
@@ -29,17 +31,18 @@ void viewDestroy(tView *pView) {
 	if(g_sCopManager.pCopList == pView->pCopList)
 		viewLoad(0);
 	
-	// Free all attached viewports
+	/* Free all attached viewports */
 	while(pView->pFirstVPort)
 		vPortDestroy(pView->pFirstVPort);
 	
-	// Free view
+	/* Free view */
 	copListDestroy(pView->pCopList);
 	memFree(pView, sizeof(tView));
 	logBlockEnd("viewDestroy()");
 }
 
-// Wywo³uje process wszystkich mened¿erów podpiêtych do ka¿dego viewporta w obêbie viewa
+/* Wywo³uje process wszystkich mened¿erów podpiêtych do ka¿dego viewporta w obêbie viewa */
+
 void viewProcessManagers(tView *pView) {
 	tVPort *pVPort;
 	tVpManager *pManager;
@@ -58,19 +61,21 @@ void viewUpdateCLUT(tView *pView) {
 	if(pView->uwFlags & V_GLOBAL_CLUT)
 		CopyMem(pView->pFirstVPort->pPalette, custom.color, sizeof(UWORD)<<pView->pFirstVPort->ubBPP);
 	else {
-		// na pêtli: vPortUpdateCLUT();
+		/* na pêtli: vPortUpdateCLUT(); */
 	}
 }
 
 void viewLoad(tView *pView) {
 	logBlockBegin("viewLoad(pView: %p)", pView);
 	WaitTOF();
+	{
+	UBYTE i;
 	ULONG uwDMA;
 	if(!pView) {
 		g_sCopManager.pCopList = g_sCopManager.pBlankList;
 		uwDMA = DMAF_RASTER;
 		custom.bplcon0 = 0;
-		UBYTE i;
+		
 		for(i = 0; i != 5; ++i)
 			custom.bplpt[1] = 0;
 		custom.bpl1mod = 0;
@@ -79,8 +84,8 @@ void viewLoad(tView *pView) {
 	else {
 		g_sCopManager.pCopList = pView->pCopList;
 		custom.bplcon0 = pView->pFirstVPort->ubBPP << 12;
-		custom.diwstrt = 0x2C81; // VSTART: 0x2C, HSTART: 0x81
-		custom.diwstop = 0x2CC1; // VSTOP: 0x2C, HSTOP: 0xC1
+		custom.diwstrt = 0x2C81; /* VSTART: 0x2C, HSTART: 0x81 */
+		custom.diwstop = 0x2CC1; /* VSTOP: 0x2C, HSTOP: 0xC1 */
 		viewUpdateCLUT(pView);
 		uwDMA = DMAF_SETCLR | DMAF_RASTER;
 	}
@@ -89,6 +94,7 @@ void viewLoad(tView *pView) {
 	custom.dmacon = uwDMA;
 	WaitTOF();
 	logBlockEnd("viewLoad()");
+	}
 }
 
 
@@ -98,36 +104,38 @@ void viewLoad(tView *pView) {
  * as system viewport and ACE viewport manager copperlists collide
  */
 tVPort *vPortCreate(tView *pView, UWORD uwWidth, UWORD uwHeight, UBYTE ubBPP, UWORD uwFlags) {
+	tVPort *pVPort;
 	logBlockBegin("vPortCreate(pView: %p, uwWidth: %u, uwHeight: %u, ubBPP: %hu, uwFlags: %u)", pView, uwWidth, uwHeight, ubBPP, uwFlags);
 	
-	tVPort *pVPort = memAllocFastClear(sizeof(tVPort));
+	pVPort = memAllocFastClear(sizeof(tVPort));
 	logWrite("Addr: %p\n", pVPort);
 	
-	// Initial field fill
+	/* Initial field fill */
 	pVPort->pView = pView;
 	pVPort->pNext = 0;
-	pVPort->uwOffsX = 0; // TODO: implement non-zero
+	pVPort->uwOffsX = 0; /* TODO: implement non-zero */
 	pVPort->uwWidth = uwWidth;
 	pVPort->uwHeight = uwWidth;
 	pVPort->ubBPP = ubBPP;
 	pVPort->pFirstManager = 0;
 	
-	// Alloc palette
+	/* Alloc palette */
 	pVPort->pPalette = memAllocFastClear(sizeof(UWORD) << ubBPP);
 	
-	// Calculate Y offset - beneath previous ViewPort
+	/* Calculate Y offset - beneath previous ViewPort */
 	pVPort->uwOffsY = 0;
+	{
 	tVPort *pPrevVPort = pView->pFirstVPort;
 	while(pPrevVPort) {
 		pVPort->uwOffsY += pPrevVPort->uwHeight;
 		pPrevVPort = pPrevVPort->pNext;
 	}
 	if(pVPort->uwOffsY)
-		pVPort->uwOffsY += 2; // TODO: not always required
+		pVPort->uwOffsY += 2; /* TODO: not always required */
 	logWrite("Offsets: %ux%u\n", pVPort->uwOffsX, pVPort->uwOffsY);
 	
 		
-	// Update view - add to vPort list
+	/* Update view - add to vPort list */
 	++pView->ubVpCount;
 	if(!pView->pFirstVPort) {
 		pView->pFirstVPort = pVPort;
@@ -140,7 +148,7 @@ tVPort *vPortCreate(tView *pView, UWORD uwWidth, UWORD uwHeight, UBYTE ubBPP, UW
 		pPrevVPort->pNext = pVPort;
 		logWrite("VPort added after %p\n", pPrevVPort);
 	}
-	
+	}
 	logBlockEnd("vPortCreate()");
 	return pVPort;
 }
@@ -149,9 +157,10 @@ tVPort *vPortCreate(tView *pView, UWORD uwWidth, UWORD uwHeight, UBYTE ubBPP, UW
  * Destroys given tVPort along with attached managers
  */
 void vPortDestroy(tVPort *pVPort) {
-	logBlockBegin("vPortDestroy(pVPort: %p)", pVPort);
+	
 	tView *pView;
 	tVPort *pPrevVPort, *pCurrVPort;
+	logBlockBegin("vPortDestroy(pVPort: %p)", pVPort);
 	
 	pView = pVPort->pView;
 	logWrite("Parent extView: %p\n", pView);
@@ -162,20 +171,20 @@ void vPortDestroy(tVPort *pVPort) {
 		if(pCurrVPort == pVPort) {
 			logWrite(" gotcha!\n");
 			
-			// Remove from list
+			/* Remove from list */
 			if(pPrevVPort)
 				pPrevVPort->pNext = pCurrVPort->pNext;
 			else
 				pView->pFirstVPort = pCurrVPort->pNext;
 			--pView->ubVpCount;
 			
-			// Destroy managers
+			/* Destroy managers */
 			logBlockBegin("Destroying managers");
 			while(pCurrVPort->pFirstManager)
 				vPortRmManager(pCurrVPort, pCurrVPort->pFirstManager);
 			logBlockEnd("Destroying managers");
 			
-			// Free stuff
+			/* Free stuff */
 			memFree(pVPort->pPalette, sizeof(UWORD) << pVPort->ubBPP);
 			memFree(pVPort, sizeof(tVPort));
 			break;
@@ -189,19 +198,20 @@ void vPortDestroy(tVPort *pVPort) {
 }
 
 void vPortUpdateCLUT(tVPort *pVPort) {
-	// TODO: blok palety kolorów, priorytety na copperliœcie
+	/* TODO: blok palety kolorów, priorytety na copperliœcie */
 }
 
-// Doczepia mened¿er do viewporta
+/* Doczepia mened¿er do viewporta */
 void vPortAddManager(tVPort *pVPort, tVpManager *pVpManager) {
-	// podpiêcie
+	/* podpiêcie */
 	if(!pVPort->pFirstManager) {
 		pVPort->pFirstManager = pVpManager;
 		logWrite("Manager %p attached to head of VP %p\n", pVpManager, pVPort);
 		return;
 	}
+	{
 	tVpManager *pVpCurr = pVPort->pFirstManager;
-	// przewiñ przed mened¿er o wy¿szym numerze ni¿ wstawiany
+	/* przewiñ przed mened¿er o wy¿szym numerze ni¿ wstawiany */
 	while(pVpCurr->pNext && pVpCurr->pNext->ubId <= pVpManager->ubId) {
 		if(pVpCurr->ubId <= pVpManager->ubId) {
 			pVpCurr = pVpCurr->pNext;
@@ -210,9 +220,10 @@ void vPortAddManager(tVPort *pVPort, tVpManager *pVpManager) {
 	pVpManager->pNext = pVpCurr->pNext;
 	pVpCurr->pNext = pVpManager;
 	logWrite("Manager %p attached after manager %p of VP %p\n", pVpManager, pVpCurr, pVPort);
+	}
 }
 
-// Usuwa mened¿er z viewporta, wywo³uje jego destroy
+/* Usuwa mened¿er z viewporta, wywo³uje jego destroy */
 void vPortRmManager(tVPort *pVPort, tVpManager *pVpManager) {
 	if(!pVPort->pFirstManager) {
 		logWrite("ERR: vPort %p has no managers!\n", pVPort);
@@ -224,6 +235,7 @@ void vPortRmManager(tVPort *pVPort, tVpManager *pVpManager) {
 		pVpManager->destroy(pVpManager);
 		return;
 	}
+	{
 	tVpManager *pParent = pVPort->pFirstManager;
 	while(pParent->pNext) {
 		if(pParent->pNext == pVpManager) {
@@ -232,6 +244,7 @@ void vPortRmManager(tVPort *pVPort, tVpManager *pVpManager) {
 			pVpManager->destroy(pVpManager);
 			return;
 		}
+	}
 	}
 	logWrite("ERR: vPort %p manager %p not found!\n", pVPort, pVpManager);
 }

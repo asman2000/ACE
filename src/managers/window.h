@@ -3,14 +3,14 @@
 
 #include <stdlib.h>
 
-#include <clib/exec_protos.h> // Amiga typedefs
-#include <clib/intuition_protos.h> // NewScreen etc
-#include <clib/graphics_protos.h> // InitVPort etc
-#include <graphics/gfxbase.h> // GfxBase etc
+#include <clib/exec_protos.h>
+#include <clib/intuition_protos.h>
+#include <clib/graphics_protos.h>
+#include <graphics/gfxbase.h>
 
 #include "config.h"
 
-#include "utils/extview.h" // tExtView
+#include "utils/extview.h"
 #include "managers/log.h"
 #include "managers/memory.h"
 
@@ -22,7 +22,7 @@
 typedef struct {
 	struct Screen *pScreen;
 	struct Window *pWindow;
-	struct View *pSysView;  /// System view before running app and swapping views
+	struct View *pSysView;  /* System view before running app and swapping views */
 	UWORD pPalette[32];
 } tWindowManager;
 

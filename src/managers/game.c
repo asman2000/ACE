@@ -7,8 +7,8 @@ tGameManager g_sGameManager;
 void gameCreate(tVoidFn pCreateCallback, tVoidFn pLoopCallback, tVoidFn pDestroyCallback) {
 	g_sGameManager.ubStateCount = 0;
 	g_sGameManager.pStateFirst = 0;
-	g_sGameManager.ubIsRunning = 1; // tu albo w pusha bo inaczej gra zaraz wyjdzie
-	// chyba lepiej tu, bo nie ma sensu wielokrotnie nadawaæ tej jedynki
+	g_sGameManager.ubIsRunning = 1; /* tu albo w pusha bo inaczej gra zaraz wyjdzie */
+	/* chyba lepiej tu, bo nie ma sensu wielokrotnie nadawaæ tej jedynki */
 	
 	gamePushState(pCreateCallback, pLoopCallback, pDestroyCallback);
 }
@@ -18,7 +18,7 @@ inline UBYTE gameIsRunning(void) {
 }
 
 void gamePushState(tVoidFn pCreateCallback, tVoidFn pLoopCallback, tVoidFn pDestroyCallback) {
-	// extViewFadeOut(g_sWindowManager.pExtView);
+	/* extViewFadeOut(g_sWindowManager.pExtView); */
 
 	tGameState *pGameState = memAllocFast(sizeof(tGameState));
 	pGameState->pCreateCallback = pCreateCallback;
@@ -33,7 +33,7 @@ void gamePushState(tVoidFn pCreateCallback, tVoidFn pLoopCallback, tVoidFn pDest
 	if (pGameState->pCreateCallback) {
 		pGameState->pCreateCallback();
 		
-		// extViewFadeIn(g_sWindowManager.pExtView);
+		/* extViewFadeIn(g_sWindowManager.pExtView); */
 	}
 }
 
@@ -43,11 +43,12 @@ void gamePopState(void) {
 	}
 
 	if (g_sGameManager.pStateFirst->pDestroyCallback) {
-		// extViewFadeOut(g_sWindowManager.pExtView);
+		/* extViewFadeOut(g_sWindowManager.pExtView); */
 
 		g_sGameManager.pStateFirst->pDestroyCallback();
 	}
 
+	{
 	tGameState *pGameState = g_sGameManager.pStateFirst;
 
 	g_sGameManager.ubStateCount -= 1;
@@ -56,14 +57,15 @@ void gamePopState(void) {
 	memFree(pGameState, sizeof(tGameState));
 
 	viewLoad(g_sGameManager.pStateFirst->pView);
+	}
 
-	// extViewFadeIn(g_sWindowManager.pExtView);
+	/* extViewFadeIn(g_sWindowManager.pExtView); */
 }
 
 void gameChangeState(tVoidFn pCreateCallback, tVoidFn pLoopCallback, tVoidFn pDestroyCallback) {
 	logBlockBegin("gameChangeState(pCreateCallback: %p, pLoopCallback: %p, pDestroyCallback: %p)", pCreateCallback, pLoopCallback, pDestroyCallback);
 	if (g_sGameManager.pStateFirst->pDestroyCallback) {
-		// extViewFadeOut(g_sWindowManager.pExtView);
+		/* extViewFadeOut(g_sWindowManager.pExtView); */
 		g_sGameManager.pStateFirst->pDestroyCallback();
 	}
 	g_sGameManager.pStateFirst->pCreateCallback = pCreateCallback;
@@ -74,7 +76,7 @@ void gameChangeState(tVoidFn pCreateCallback, tVoidFn pLoopCallback, tVoidFn pDe
 	if (g_sGameManager.pStateFirst->pCreateCallback) {
 		g_sGameManager.pStateFirst->pCreateCallback();
 		
-		// extViewFadeIn(g_sWindowManager.pExtView);
+		/* extViewFadeIn(g_sWindowManager.pExtView); */
 	}
 	logBlockEnd("gameChangeState");
 }

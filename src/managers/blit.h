@@ -6,10 +6,10 @@
  * Allows complete async between CPU and blitter by adding blits to queue
  */
 
-#include <clib/exec_protos.h> // Amiga typedefs
-#include <exec/interrupts.h>  // struct Interrupt
-#include <hardware/dmabits.h> // DMAF_BLITTER
-#include <hardware/intbits.h> // INTB_BLIT
+#include <clib/exec_protos.h>
+#include <exec/interrupts.h>
+#include <hardware/dmabits.h>
+#include <hardware/intbits.h>
 
 #include "config.h"
 #include "managers/log.h"
@@ -17,23 +17,25 @@
 #include "utils/custom.h"
 #include "utils/bitmap.h"
 
-// BltCon0 channel enable bits
+/* BltCon0 channel enable bits */
 #define USEA 0x800
 #define USEB 0x400
 #define USEC 0x200
 #define USED 0x100
 
-// Minterm presets - OR unfriendly!
+/* Minterm presets - OR unfriendly! */
 #define MINTERM_A 0xF0
 #define MINTERM_B 0xCC
 #define MINTERM_A_OR_C 0xFA
 #define MINTERM_COOKIE 0xCA
 #define MINTERM_COPY 0xC0
 
-// 34 bajty na strukturê
-// przy kolejce 1024 wpisów obci¹¿enie 34KB
-// Villages do odrysowania pe³nej ramki tilemapy potrzebuje WxHxBPP 14x12x5 = 840 blitów (27,9KB)
-// W przypadku grafiki interleaved bêdzie to 14x12 = 168 blitów (5,6KB)
+/**
+ 34 bajty na strukturê
+ przy kolejce 1024 wpisów obci¹¿enie 34KB
+ Villages do odrysowania pe³nej ramki tilemapy potrzebuje WxHxBPP 14x12x5 = 840 blitów (27,9KB)
+ W przypadku grafiki interleaved bêdzie to 14x12 = 168 blitów (5,6KB)
+ */
 
 typedef void fnBlitterFill(
 	UWORD bltcon0, UWORD bltcon1, UWORD bltafwm, UWORD bltalwm,
@@ -48,45 +50,45 @@ typedef void fnBlitterFill(
  * Fields are aligned in same order as in Custom struct
  */
 typedef struct {
-	WORD bltcmod; /// Bitplane C Modulo
-	WORD bltbmod; /// Bitplane B Modulo
-	WORD bltamod; /// Bitplane A Modulo
-	WORD bltdmod; /// Bitplane D Modulo
+	WORD bltcmod; /* Bitplane C Modulo */
+	WORD bltbmod; /* Bitplane B Modulo */
+	WORD bltamod; /* Bitplane A Modulo */
+	WORD bltdmod; /* Bitplane D Modulo */
 	
-	UWORD bltcon0; /// Blit control 0
-	UWORD bltcon1; /// Blit control 1
+	UWORD bltcon0; /* Blit control 0 */
+	UWORD bltcon1; /* Blit control 1 */
 	
-	UWORD bltafwm; /// First word mask
-	UWORD bltalwm; /// Last word mask
+	UWORD bltafwm; /* First word mask */
+	UWORD bltalwm; /* Last word mask */
 	
-	UBYTE *bltcpt; /// Bitplane C ptr
-	UBYTE *bltbpt; /// Bitplane B ptr
-	UBYTE *bltapt; /// Bitplane A ptr
-	UBYTE *bltdpt; /// Bitplane D ptr
+	UBYTE *bltcpt; /* Bitplane C ptr */
+	UBYTE *bltbpt; /* Bitplane B ptr */
+	UBYTE *bltapt; /* Bitplane A ptr */
+	UBYTE *bltdpt; /* Bitplane D ptr */
 	
-	UWORD bltsize; /// Blit size
+	UWORD bltsize; /* Blit size */
 	
-	UWORD bltcdat; /// Bitplane C data
-	UWORD bltbdat; /// Bitplane B data
-	UWORD bltadat; /// Bitplane A data
+	UWORD bltcdat; /* Bitplane C data */
+	UWORD bltbdat; /* Bitplane B data */
+	UWORD bltadat; /* Bitplane A data */
 } tBlitData;
 
 /**
  * Blit manager struct
  */
 typedef struct {
-	UWORD uwQueueLength;          /// Length of blit queue
-	UWORD uwAddPos;               /// Queue pos at which next blit will be added
-	UWORD uwBlitPos;              /// Queue pos which blitter currently processes
-	tBlitData *pBlitData;         /// Blit queue array
+	UWORD uwQueueLength;          /* Length of blit queue */
+	UWORD uwAddPos;               /* Queue pos at which next blit will be added */
+	UWORD uwBlitPos;              /* Queue pos which blitter currently processes */
+	tBlitData *pBlitData;         /* Blit queue array */
 	fnBlitterFill *pBlitterSetFn;
-	char *szHandlerName;          /// For interrupt handler, meaningful description
-	struct Interrupt *pInt;       /// Interrupt structure of manager, must be PUBLIC type
-	                              // Previous interrupt data
-	struct Interrupt *pPrevInt;   /// Previous registered interrupt handler
-	UWORD uwOldIntEna;            /// Old intEna
-	UWORD uwOldDmaCon;            /// Old dmaCon
-	UBYTE ubBlitStarted;          /// 1 if last blitter op was blit from queue
+	char *szHandlerName;          /* For interrupt handler, meaningful description */
+	struct Interrupt *pInt;       /* Interrupt structure of manager, must be PUBLIC type */
+	                              /* Previous interrupt data */
+	struct Interrupt *pPrevInt;   /* Previous registered interrupt handler */
+	UWORD uwOldIntEna;            /* Old intEna */
+	UWORD uwOldDmaCon;            /* Old dmaCon */
+	UBYTE ubBlitStarted;          /* 1 if last blitter op was blit from queue */
 } tBlitManager;
 
 extern tBlitManager g_sBlitManager;

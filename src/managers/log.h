@@ -1,11 +1,11 @@
 #ifndef GUARD_ACE_MANAGER_LOG_H
 #define GUARD_ACE_MANAGER_LOG_H
 
-#include <stdio.h> // fopen etc
-#include <string.h> // strlen etc
-#include <stdarg.h> // va_list etc
-#include <clib/exec_protos.h> // Amiga typedefs
-#include <clib/graphics_protos.h> // Amiga typedefs
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include <clib/exec_protos.h>
+#include <clib/graphics_protos.h>
 
 #include "config.h"
 #include "managers/timer.h"
@@ -86,9 +86,12 @@ void _logBitMap(
 # define logClose() _logClose()
 # define logPushIndent() _logPushIndent()
 # define logPopIndent() _logPopIndent()
-# define logWrite(...) _logWrite(__VA_ARGS__)
+/*# define logWrite(__VA_ARGS__) _logWrite(__VA_ARGS__)*/
+void logWrite(char* format, ...);
 
-# define logBlockBegin(...) _logBlockBegin(__VA_ARGS__)
+/*# define logBlockBegin(char* format,...) _logBlockBegin(char* format,...)*/
+void logBlockBegin(char* format, ...);
+
 # define logBlockEnd(szBlockName) _logBlockEnd(szBlockName)
 
 # define logAvgCreate(szName, wCount) _logAvgCreate(szName, wCount)
@@ -104,9 +107,9 @@ void _logBitMap(
 # define logClose()
 # define logPushIndent()
 # define logPopIndent()
-# define logWrite(...)
+# define logWrite(__VA_ARGS__)
 
-# define logBlockBegin(...)
+# define logBlockBegin(__VA_ARGS__)
 # define logBlockEnd(szBlockName)
 
 # define logAvgCreate(szName, wCount) 0

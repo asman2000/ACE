@@ -1,8 +1,8 @@
 #ifndef GUARD_ACE_UTIL_EXTVIEW_H
 #define GUARD_ACE_UTIL_EXTVIEW_H
 
-#include <clib/exec_protos.h>     // Amiga typedefs
-#include <clib/graphics_protos.h> // BitMap etc.
+#include <clib/exec_protos.h>
+#include <clib/graphics_protos.h>
 
 #include "config.h"
 #include "managers/log.h"
@@ -15,9 +15,11 @@
 
 #define VP_NOCLUT 1
 
-// identyfikatory mened¿erów viewporta
-// numer determinuje kolejnoœæ na liœcie a zatem odœwie¿ania
-// kamera na koñcu, ¿eby reszta mog³a wykryæ ruch
+/*
+ identyfikatory mened¿erów viewporta
+ numer determinuje kolejnoœæ na liœcie a zatem odœwie¿ania
+ kamera na koñcu, ¿eby reszta mog³a wykryæ ruch
+*/
 #define VPM_SCROLL       0
 #define VPM_TILEBUFFER   1
 #define VPM_DOUBLEBUFFER 2
@@ -32,7 +34,7 @@ typedef struct _tVpManager {
 	struct _tVpManager *pNext;
 	void  (*process)(struct _tVpManager *pManager);
 	void  (*destroy)(struct _tVpManager *pManager);
-	struct _tVPort *pVPort;                         /// Quick ref to VPort
+	struct _tVPort *pVPort;                         /* Quick ref to VPort */
 	UBYTE ubId;
 } tVpManager;
 
@@ -46,19 +48,19 @@ typedef struct {
 } tView;
 
 typedef struct _tVPort {
-	// Main
-	tView *pView;              /// Pointer to parent tView
-	struct _tVPort *pNext;     /// Pointer to next tVPort
-	tVpManager *pFirstManager; /// tVpManager list
+	/* Main */
+	tView *pView;              /* Pointer to parent tView */
+	struct _tVPort *pNext;     /* Pointer to next tVPort */
+	tVpManager *pFirstManager; /* tVpManager list */
 	UWORD uwFlags;
-	// VPort dimensions
+	/* VPort dimensions */
 	UWORD uwOffsX;
 	UWORD uwOffsY;
 	UWORD uwWidth;
 	UWORD uwHeight;
-	// Color info
-	UBYTE ubBPP;               /// Bitplane count
-	UWORD *pPalette;           /// Destination palette
+	/* Color info */
+	UBYTE ubBPP;               /* Bitplane count */
+	UWORD *pPalette;           /* Destination palette */
 } tVPort;
 
 /* Globals */

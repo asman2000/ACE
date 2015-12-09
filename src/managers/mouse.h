@@ -1,8 +1,8 @@
 #ifndef GUARD_ACE_MANAGER_MOUSE_H
 #define GUARD_ACE_MANAGER_MOUSE_H
 
-#include <clib/exec_protos.h> // Amiga typedefs
-#include <clib/intuition_protos.h> // IDCMP_RAWKEY etc
+#include <clib/exec_protos.h>
+#include <clib/intuition_protos.h>
 #include <devices/input.h>
 #include <clib/alib_protos.h>
 

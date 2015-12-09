@@ -1,7 +1,7 @@
 #ifndef GUARD_ACE_MANAGER_RAND_H
 #define GUARD_ACE_MANAGER_RAND_H
 
-#include <clib/exec_protos.h> // Amiga typedefs
+#include <clib/exec_protos.h>
 
 #include "config.h"
 
@@ -35,7 +35,7 @@ UBYTE ubRandMinMax(
 	IN UBYTE ubMax
 );
 
-UWORD uwRand(void); // UWORD is faster on Amiga
+UWORD uwRand(void); /* UWORD is faster on Amiga*/
 
 UWORD uwRandMax(
 	IN UWORD uwMax
@@ -46,7 +46,7 @@ UWORD uwRandMinMax(
 	IN UWORD uwMax
 );
 
-ULONG ulRand(void); // ULONG is slower on Amiga, use UWORD instead
+ULONG ulRand(void); /* ULONG is slower on Amiga, use UWORD instead */
 
 ULONG ulRandMax(
 	IN ULONG ulMax

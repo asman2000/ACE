@@ -14,7 +14,7 @@ void randInit(ULONG ulSeed) {
 	g_sRandManager.uwRandW = (88675123 + ulSeed) & 0xFFFF;
 }
 
- // ULONG is slower on Amiga, use UWORD instead
+ /* ULONG is slower on Amiga, use UWORD instead */
 ULONG ulRand(void) {
 	ULONG ulRandT;
 	g_sRandManager.ulRandX ^= g_sRandManager.ulRandX << 16;
@@ -29,7 +29,7 @@ ULONG ulRand(void) {
 	return g_sRandManager.ulRandZ;
 }
 
-// UWORD is faster on Amiga
+/* UWORD is faster on Amiga */
 UBYTE ubRand() {
 	return uwRand() ^ 0xFF;
 }

@@ -24,7 +24,7 @@ void _memCreate(void) {
 
 void _memEntryAdd(void *pAddr, ULONG ulSize, UWORD uwLine, char *szFile) {
 	tMemEntry *pNext;
-	// Add mem usage entry
+	/* Add mem usage entry */
 	pNext = s_pMemTail;
 	s_pMemTail = _memAllocRls(sizeof(tMemEntry), MEMF_CLEAR);
 	s_pMemTail->pAddr = pAddr;
@@ -35,7 +35,7 @@ void _memEntryAdd(void *pAddr, ULONG ulSize, UWORD uwLine, char *szFile) {
 	else
 		fprintf(s_pMemLog, "allocated FAST memory @%p, size %lu (%s:%u)\n", pAddr, ulSize, szFile, uwLine);
 	
-	// Update mem usage counter
+	/* Update mem usage counter */
 	if(TypeOfMem(pAddr) & MEMF_CHIP) {
 		s_ulChipUsage += ulSize;
 		if(s_ulChipUsage > s_ulChipPeakUsage)
@@ -46,7 +46,7 @@ void _memEntryAdd(void *pAddr, ULONG ulSize, UWORD uwLine, char *szFile) {
 		if(s_ulFastUsage > s_ulFastPeakUsage)
 			s_ulFastPeakUsage = s_ulFastUsage;
 	}
-	// fprintf(s_pMemLog, "usage: CHIP: %lu, FAST: %lu\n", s_ulChipUsage, s_ulFastUsage);
+	/* fprintf(s_pMemLog, "usage: CHIP: %lu, FAST: %lu\n", s_ulChipUsage, s_ulFastUsage); */
 
 	fflush(s_pMemLog);
 }
@@ -55,7 +55,7 @@ void _memEntryDelete(void *pAddr, ULONG ulSize, UWORD uwLine, char *szFile) {
 	tMemEntry *pPrev = 0;
 	tMemEntry *pCurr = s_pMemTail;
 	
-	// find memory entry
+	/* find memory entry */
 	while(pCurr && pCurr->pAddr != pAddr) {
 		pPrev = pCurr;
 		pCurr = pCurr->pNext;
@@ -66,24 +66,24 @@ void _memEntryDelete(void *pAddr, ULONG ulSize, UWORD uwLine, char *szFile) {
 		return;
 	}
 	
-	// unlink entry from list
+	/* unlink entry from list */
 	if(pPrev)
 		pPrev->pNext = pCurr->pNext;
 	else
 		s_pMemTail = pCurr->pNext;
 	
-	// remove entry
+	/* remove entry */
 	if(ulSize != pCurr->ulSize) {
 		fprintf(s_pMemLog, "WARNING: memFree size mismatch at memory %p: %lu, should be %lu (%s:%u)\n", pAddr, ulSize, pCurr->ulSize, szFile, uwLine);
 	}
 	fprintf(s_pMemLog, "freed memory %p, size %lu (%s:%u)\n", pAddr, ulSize, szFile, uwLine);
 	
-	// Update mem usage counter
+	/* Update mem usage counter */
 	if(TypeOfMem(pAddr) & MEMF_CHIP)
 		s_ulChipUsage -= ulSize;
 	else
 		s_ulFastUsage -= ulSize;
-	// fprintf(s_pMemLog, "Usage: CHIP: %lu, FAST: %lu\n", s_ulChipUsage, s_ulFastUsage);
+	/* fprintf(s_pMemLog, "Usage: CHIP: %lu, FAST: %lu\n", s_ulChipUsage, s_ulFastUsage); */
 	
 	fflush(s_pMemLog);
 }

@@ -69,10 +69,10 @@ tTextBitMap *fontCreateTextBitMap(tFont *pFont, char *szText) {
 	UWORD uwX;
 	UWORD uwY = pFont->uwHeight;
 
-	// Init struktury bitmapy napisu - przy okazji wyzerowanie uwActualWidth
+	/* Init struktury bitmapy napisu - przy okazji wyzerowanie uwActualWidth */
 	pTextBitMap = memAllocFastClear(sizeof(tTextBitMap));
 
-	// Zmierzenie d³ugoœci napisu
+	/* Zmierzenie d³ugoœci napisu */
 	for (p = szText; *(p); ++p) {
 		if(*p == '\n') {
 			uwY += pFont->uwHeight;
@@ -81,10 +81,10 @@ tTextBitMap *fontCreateTextBitMap(tFont *pFont, char *szText) {
 		}
 	}
 	
-	// Init bitmapy
+	/* Init bitmapy */
 	pTextBitMap->pBitMap = bitmapCreate(pTextBitMap->uwActualWidth, uwY, 1, BMF_CLEAR);
 
-	// Odrysowanie napisu na bitmapie tekstu
+	/* Odrysowanie napisu na bitmapie tekstu */
 	for (p = szText, uwX = 0, uwY = 0; *(p); ++p) {
 		if(*p == '\n') {
 			uwX = 0;
@@ -118,7 +118,7 @@ void fontDestroyTextBitMap(tTextBitMap *pTextBitMap) {
  * 	Creating own minterm: http://amigadev.elowar.com/read/ADCD_2.1/Hardware_Manual_guide/node011E.html
  */
 void fontDrawTextBitMap(struct BitMap *pDest, tTextBitMap *pTextBitMap, UWORD uwX, UWORD uwY, UBYTE ubColor, UBYTE ubFlags) {
-	// Wyrównanie
+	/* Wyrównanie */
 	if (ubFlags & FONT_RIGHT)
 		uwX -= pTextBitMap->uwActualWidth;
 	else if (ubFlags & FONT_HCENTER)
@@ -130,15 +130,15 @@ void fontDrawTextBitMap(struct BitMap *pDest, tTextBitMap *pTextBitMap, UWORD uw
 	
 	if(ubFlags & FONT_SHADOW)
 		fontDrawTextBitMap(pDest, pTextBitMap, uwX, uwY+1, 0, FONT_COOKIE);
-	
+	{
 	UBYTE i;
 	UBYTE ubMinterm;
 	tBitMap sTmpDest;
 	
-	// Init pomocniczej bitmapy docelowej
+	/* Init pomocniczej bitmapy docelowej */
 	InitBitMap(&sTmpDest, 1, pDest->BytesPerRow<<3, pDest->Rows);
 	
-	// Czary mary na blitterze
+	/* Czary mary na blitterze */
 	for (i = 0; i != pDest->Depth; ++i) {
 		if(ubFlags & FONT_COOKIE) {
 			if(ubColor & 1)
@@ -165,6 +165,7 @@ void fontDrawTextBitMap(struct BitMap *pDest, tTextBitMap *pTextBitMap, UWORD uw
 			ubMinterm, 0x01
 		);
 		ubColor >>= 1;
+	}
 	}
 }
 

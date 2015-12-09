@@ -1,7 +1,7 @@
 #ifndef GUARD_ACE_UTIL_BOBFRAMES_H
 #define GUARD_ACE_UTIL_BOBFRAMES_H
 
-#include <clib/exec_protos.h> // Amiga typedefs
+#include <clib/exec_protos.h>
 
 #include "managers/log.h"
 #include "managers/memory.h"

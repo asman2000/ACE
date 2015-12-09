@@ -43,7 +43,10 @@ inline UWORD mouseGetY(void) {
 }
 
 inline void mouseSetPointer(UWORD *pCursor, WORD wHeight, WORD wWidth, WORD wOffsetX, WORD wOffsetY) {
-	logBlockBegin("mouseSetPointer(pCursor: %p, wHeight: %d, wWidth, %d, wOffsetX: %d, wOffsetY: %d)", pCursor, wHeight, wWidth, wOffsetX, wOffsetY);
+	/*
+	//logBlockBegin("mouseSetPointer(pCursor: %p, wHeight: %d, wWidth, %d, wOffsetX: %d, wOffsetY: %d)", pCursor, wHeight, wWidth, wOffsetX, wOffsetY);
+	*/
+	logBlockBegin("ala", wHeight);	
 	SetPointer(g_sWindowManager.pWindow, pCursor, wHeight, wWidth, wOffsetX, wOffsetY);
 	logBlockEnd("mouseSetPointer");
 }
@@ -65,7 +68,7 @@ void mouseMove(WORD wX, WORD wY) {
 
 	pEvent->ie_Class = IECLASS_POINTERPOS;
 	pEvent->ie_Code = IECODE_NOBUTTON;
-	pEvent->ie_Qualifier = IEQUALIFIER_RELATIVEMOUSE; //pozycja wzglêdna
+	pEvent->ie_Qualifier = IEQUALIFIER_RELATIVEMOUSE; /*pozycja wzglêdna */
 	pEvent->ie_X = wX;
 	pEvent->ie_Y = wY;
 

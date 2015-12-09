@@ -26,15 +26,15 @@
 
 typedef struct {
 	tVpManager sCommon;
-	tCameraManager *pCameraManager;  /// Quick ref to camera
+	tCameraManager *pCameraManager;  /* Quick ref to camera */
 
-	struct BitMap *pBuffer;          /// Ptr to buffer bitmap
-	tCopBlock *pStartBlock;          /// Initial data fetch
-	tCopBlock *pBreakBlock;          /// Bitplane ptr reset
-	tUwCoordYX uBfrBounds;           /// Real bounds of buffer (includes height reserved for x-scroll)
-	UWORD uwBmAvailHeight;           /// Avail height of buffer to blit (excludes height reserved for x-scroll)
-	UWORD uwVpHeightPrev;            /// Prev height of related VPort, used to force refresh on change
-	UWORD uwModulo;                  /// Bitplane modulo
+	struct BitMap *pBuffer;          /* Ptr to buffer bitmap */
+	tCopBlock *pStartBlock;          /* Initial data fetch */
+	tCopBlock *pBreakBlock;          /* Bitplane ptr reset */
+	tUwCoordYX uBfrBounds;           /* Real bounds of buffer (includes height reserved for x-scroll) */
+	UWORD uwBmAvailHeight;           /* Avail height of buffer to blit (excludes height reserved for x-scroll) */
+	UWORD uwVpHeightPrev;            /* Prev height of related VPort, used to force refresh on change */
+	UWORD uwModulo;                  /* Bitplane modulo */
 	tAvg *pAvg;
 } tScrollBufferManager;
 
