@@ -1,8 +1,8 @@
 
 ACE_INCLUDE = D:/GitHub/ACE/src/
 
-CC = vc -quiet
-CFLAGS =-c -O2 -sc -sd -IC:/vbcc/targets/m68k-amigaos/include/ -IC:/vbcc/include_h/ -I$(ACE_INCLUDE)
+CC = vc
+CFLAGS =-quiet -c -O2 -sc -sd -IC:/vbcc/targets/m68k-amigaos/include/ -IC:/vbcc/include_h/ -I$(ACE_INCLUDE)
 
 LIBS = -LC:/VBCC/targets/m68k-amigaos/lib -lvc -lamiga
 
