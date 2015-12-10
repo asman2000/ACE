@@ -42,7 +42,7 @@ tBitMap *bitmapCreate(UWORD uwWidth, UWORD uwHeight, UBYTE ubDepth, UBYTE ubFlag
 }
 
 tBitMap *bitmapCreateFromFile(char *szFileName) {
-	tBitMap *pBitMap;
+	tBitMap *pBitMap = 0;
 	FILE *pFile;
 	UWORD uwWidth, uwHeight;            // wymiary obrazka
 	UWORD uwCopperLength, uwCopperSize; // copperlista - raczej niepotrzebne, usun¹æ póŸniej ze specyfikacji pliku
