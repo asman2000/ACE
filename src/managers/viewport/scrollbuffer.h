@@ -21,6 +21,7 @@
 #include "managers/blit.h"
 #include "managers/copper.h"
 #include "managers/viewport/camera.h"
+#include "managers/performance.h"
 
 /* Types */
 
