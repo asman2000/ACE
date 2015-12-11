@@ -17,7 +17,6 @@
 
 #include <exec/types.h>
 
-
 typedef struct {
 	UWORD uwCount;
 	UWORD uwCurrDelta;

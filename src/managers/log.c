@@ -1,9 +1,17 @@
 #include "log.h"
+#include "timer.h"
 #ifdef GAME_DEBUG
 
 #ifndef LOG_FILE_NAME
 #define LOG_FILE_NAME "game.log"
 #endif
+
+#include <stdio.h> // fopen etc
+#include <string.h> // strlen etc
+#include <stdarg.h> // va_list etc
+#include <clib/exec_protos.h> // Amiga typedefs
+#include <clib/graphics_protos.h> // Amiga typedefs
+
 
 typedef struct {
 	FILE *pFile;
@@ -121,41 +129,6 @@ void _logBlockEnd(char *szBlockName) {
 }
 
 
-// Copperlist debug
-void _logUCopList(struct UCopList *pUCopList) {
-	logBlockBegin("logUCopList(pUCopList: %p)", pUCopList);
-	logWrite("Next: %p\n", pUCopList->Next);
-	logWrite("FirstCopList: %p\n", pUCopList->FirstCopList);
-	logWrite("CopList: %p\n", pUCopList->CopList);
-	
-	logBlockBegin("pUCopList->CopList");
-	logWrite("Next: %p\n", pUCopList->CopList->Next);
-	logWrite("_CopList: %p\n", pUCopList->CopList->_CopList);
-	logWrite("_ViewPort: %p\n", pUCopList->CopList->_ViewPort);
-	logWrite("CopIns: %p\n", pUCopList->CopList->CopIns);
-	logWrite("CopPtr: %p\n", pUCopList->CopList->CopPtr);
-	logWrite("CopLStart: %p\n", pUCopList->CopList->CopLStart);
-	logWrite("CopSStart: %p\n", pUCopList->CopList->CopSStart);
-	logWrite("Count: %u\n", pUCopList->CopList->Count);
-	logWrite("MaxCount: %u\n", pUCopList->CopList->MaxCount);
-	logWrite("DyOffset: %u\n", pUCopList->CopList->DyOffset);
-	logBlockEnd("pUCopList->CopList");
-	
-	logBlockEnd("logUCopList()");
-}
 
-void _logBitMap(struct BitMap *pBitMap) {
-	UBYTE i;
-	logBlockBegin("logBitMap(pBitMap: %p)", pBitMap);
-	logWrite("BytesPerRow: %u\n", pBitMap->BytesPerRow);
-	logWrite("Rows: %u\n", pBitMap->Rows);
-	logWrite("Flags: %hu\n", pBitMap->Flags);
-	logWrite("Depth: %hu\n", pBitMap->Depth);
-	logWrite("pad: %u\n", pBitMap->pad);
-	// since Planes is always 8-long, dump all its entries
-	for(i = 0; i != 8; ++i)
-		logWrite("Planes[%hu]: %p\n", i, pBitMap->Planes[i]);
-	logBlockEnd("logBitMap");
-}
 
 #endif /* end of GAME_DEBUG */

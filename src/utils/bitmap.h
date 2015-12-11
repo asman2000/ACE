@@ -45,4 +45,14 @@ inline BYTE bitmapIsInterleaved(
 	IN tBitMap *pBitMap
 );
 
+#ifdef GAME_DEBUG
+
+void logBitMap(struct BitMap *pBitMap);
+
+#else 
+
+#define logBitMap(pBitmap)
+
 #endif
+
+#endif /*GUARD_ACE_UTIL_BITMAP_H*/

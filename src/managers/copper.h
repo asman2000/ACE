@@ -2,6 +2,7 @@
 #define GUARD_ACE_MANAGER_COPPER_H
 
 #include <hardware/dmabits.h> // DMAF defines
+#include <graphics/copper.h>
 
 #include "types.h"
 #include "managers/log.h"
@@ -145,5 +146,16 @@ void copSetWait(
 	UBYTE ubX,
 	UBYTE ubY
 );
+
+/* copper log function available only in game debug mode */
+#ifdef GAME_DEBUG
+
+void logUCopList(IN struct UCopList *pUCopList);
+
+#else
+
+#define logUCopList(pUCopList)
+
+#endif
 
 #endif
