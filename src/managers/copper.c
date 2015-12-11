@@ -1,4 +1,5 @@
 #include "copper.h"
+#include "log.h"
 
 tCopManager g_sCopManager;
 
@@ -371,3 +372,30 @@ void copDump(void) {
 	
 	logBlockEnd("copDump()");
 }
+
+#ifdef GAME_DEBUG
+
+// Copperlist debug
+void _logUCopList(struct UCopList *pUCopList) {
+	logBlockBegin("logUCopList(pUCopList: %p)", pUCopList);
+	logWrite("Next: %p\n", pUCopList->Next);
+	logWrite("FirstCopList: %p\n", pUCopList->FirstCopList);
+	logWrite("CopList: %p\n", pUCopList->CopList);
+	
+	logBlockBegin("pUCopList->CopList");
+	logWrite("Next: %p\n", pUCopList->CopList->Next);
+	logWrite("_CopList: %p\n", pUCopList->CopList->_CopList);
+	logWrite("_ViewPort: %p\n", pUCopList->CopList->_ViewPort);
+	logWrite("CopIns: %p\n", pUCopList->CopList->CopIns);
+	logWrite("CopPtr: %p\n", pUCopList->CopList->CopPtr);
+	logWrite("CopLStart: %p\n", pUCopList->CopList->CopLStart);
+	logWrite("CopSStart: %p\n", pUCopList->CopList->CopSStart);
+	logWrite("Count: %u\n", pUCopList->CopList->Count);
+	logWrite("MaxCount: %u\n", pUCopList->CopList->MaxCount);
+	logWrite("DyOffset: %u\n", pUCopList->CopList->DyOffset);
+	logBlockEnd("pUCopList->CopList");
+
+	logBlockEnd("logUCopList()");
+}
+
+#endif

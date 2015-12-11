@@ -42,7 +42,7 @@ tBitMap *bitmapCreate(UWORD uwWidth, UWORD uwHeight, UBYTE ubDepth, UBYTE ubFlag
 }
 
 tBitMap *bitmapCreateFromFile(char *szFileName) {
-	tBitMap *pBitMap;
+	tBitMap *pBitMap = 0;
 	FILE *pFile;
 	UWORD uwWidth, uwHeight;            // wymiary obrazka
 	UWORD uwCopperLength, uwCopperSize; // copperlista - raczej niepotrzebne, usun¹æ póŸniej ze specyfikacji pliku
@@ -93,3 +93,21 @@ void bitmapDestroy(tBitMap *pBitMap) {
 inline BYTE bitmapIsInterleaved(tBitMap *pBitMap) {
 	return (pBitMap->Depth > 1 && ((ULONG)pBitMap->Planes[1] - (ULONG)pBitMap->Planes[0])*pBitMap->Depth == pBitMap->BytesPerRow);
 }
+
+#ifdef GAME_DEBUG
+
+void logBitMap(struct BitMap *pBitMap) {
+	UBYTE i;
+	logBlockBegin("logBitMap(pBitMap: %p)", pBitMap);
+	logWrite("BytesPerRow: %u\n", pBitMap->BytesPerRow);
+	logWrite("Rows: %u\n", pBitMap->Rows);
+	logWrite("Flags: %hu\n", pBitMap->Flags);
+	logWrite("Depth: %hu\n", pBitMap->Depth);
+	logWrite("pad: %u\n", pBitMap->pad);
+	/* since Planes is always 8-long, dump all its entries */
+	for(i = 0; i != 8; ++i)
+		logWrite("Planes[%hu]: %p\n", i, pBitMap->Planes[i]);
+	logBlockEnd("logBitMap");
+}
+
+#endif /* GAME_DEBUG */

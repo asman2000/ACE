@@ -1,6 +1,8 @@
 #ifndef GUARD_ACE_CONFIG_H
 #define GUARD_ACE_CONFIG_H
 
+#include <exec/types.h>
+
 /* Project Compilation flags */
 #define GAME_DEBUG
 

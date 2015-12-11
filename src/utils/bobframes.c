@@ -31,7 +31,8 @@ tBobFrameset *bobFramesCreate(char *szFileName) {
 			pFrame = pFrameset->pData[ubAnim][ubDir];
 			
 			// logBlockBegin("Reading bob raster %u-%u @%p", ubAnim, ubDir, pFrame);
-			g_sLogManager.ubShutUp = 1;
+			//g_sLogManager.ubShutUp = 1;
+
 			// Bitmap
 			pFrame->pBitMap = bitmapCreate(pFrameset->ubFrameWidth, pFrameset->ubFrameHeight, BOBFRAMES_BPP, 0);
 			for(ubPlane = 0; ubPlane != BOBFRAMES_BPP; ++ubPlane)
@@ -40,7 +41,8 @@ tBobFrameset *bobFramesCreate(char *szFileName) {
 			// Mask
 			pFrame->pMask = memAllocChip((pFrameset->ubFrameWidth >> 3) * pFrameset->ubFrameHeight);
 			fread(pFrame->pMask, (pFrameset->ubFrameWidth >> 3) * pFrameset->ubFrameHeight, 1, pFile);
-			g_sLogManager.ubShutUp = 0;
+
+			//g_sLogManager.ubShutUp = 0;
 			// logBlockEnd("Reading bob raster");
 		}
 	}
@@ -68,9 +70,9 @@ void bobFramesDestroy(tBobFrameset *pFrameset) {
 		for(ubDir = 0; ubDir != BOB_DIRS; ++ubDir) {
 			pFrame = pImageDatas[ubAnim][ubDir];
 			// Zwolnij surówkê bitplane'ów + maskê
-			g_sLogManager.ubShutUp = 1;
+			//g_sLogManager.ubShutUp = 1;
 			bitmapDestroy(pFrame->pBitMap);
-			g_sLogManager.ubShutUp = 0;
+			//g_sLogManager.ubShutUp = 0;
 			memFree(pFrame->pMask, (pFrameset->ubFrameWidth>>3) * pFrameset->ubFrameHeight);
 			memFree(pFrame, sizeof(tBobFrame));
 		}

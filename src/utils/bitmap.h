@@ -14,10 +14,10 @@
 #include <clib/exec_protos.h> // Amiga typedefs
 #include <clib/graphics_protos.h> // BitMap etc
 
-#include "ACE:config.h"
-#include "ACE:managers/log.h"
-#include "ACE:managers/memory.h"
-#include "ACE:utils/custom.h"
+#include "config.h"
+#include "managers/log.h"
+#include "managers/memory.h"
+#include "utils/custom.h"
 
 /* Types */
 typedef struct BitMap tBitMap;
@@ -45,4 +45,14 @@ inline BYTE bitmapIsInterleaved(
 	IN tBitMap *pBitMap
 );
 
+#ifdef GAME_DEBUG
+
+void logBitMap(struct BitMap *pBitMap);
+
+#else 
+
+#define logBitMap(pBitmap)
+
 #endif
+
+#endif /*GUARD_ACE_UTIL_BITMAP_H*/

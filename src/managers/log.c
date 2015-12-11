@@ -1,5 +1,32 @@
 #include "log.h"
+#include "timer.h"
 #ifdef GAME_DEBUG
+
+#ifndef LOG_FILE_NAME
+#define LOG_FILE_NAME "game.log"
+#endif
+
+#include <stdio.h> // fopen etc
+#include <string.h> // strlen etc
+#include <stdarg.h> // va_list etc
+#include <clib/exec_protos.h> // Amiga typedefs
+#include <clib/graphics_protos.h> // Amiga typedefs
+
+
+typedef struct {
+	FILE *pFile;
+	UBYTE ubIndent;
+	UBYTE ubIsLastWasInline;
+	ULONG pTimeStack[256];
+	char szTimeBfr[255];
+	UBYTE ubBlockEmpty;
+	UBYTE ubShutUp;
+} tLogManager;
+
+/*extern tLogManager g_sLogManager;*/
+
+
+
 /* Globals */
 tLogManager g_sLogManager;
 
@@ -101,110 +128,7 @@ void _logBlockEnd(char *szBlockName) {
 	g_sLogManager.ubBlockEmpty = 0;
 }
 
-// Average logging
-/**
- *
- */
-tAvg *_logAvgCreate(char *szName, UWORD uwCount) {
-	tAvg *pAvg = memAllocFast(sizeof(tAvg));
-	pAvg->szName = szName;
-	pAvg->uwCount = uwCount;
-	pAvg->uwCurrDelta = 0;
-	pAvg->pDeltas = memAllocFast(uwCount*sizeof(tAvg));
-	pAvg->ulMin = 0xFFFFFFFF;
-	pAvg->ulMax = 0;
-	return pAvg;
-}
 
-/**
- *
- */
-void _logAvgDestroy(tAvg *pAvg) {
-	logAvgWrite(pAvg);
-	memFree(pAvg->pDeltas, pAvg->uwCount*sizeof(tAvg));
-	memFree(pAvg, sizeof(tAvg));
-}
 
-/**
- *
- */
-void _logAvgBegin(tAvg *pAvg) {
-	pAvg->ulStartTime = timerGetPrec();
-}
 
-/**
- *
- */
-void _logAvgEnd(tAvg *pAvg) {
-	// Calculate timestamp
-	pAvg->pDeltas[pAvg->uwCurrDelta] = timerGetDelta(pAvg->ulStartTime, timerGetPrec());
-	// Update min/max
-	if(pAvg->pDeltas[pAvg->uwCurrDelta] > pAvg->ulMax)
-		pAvg->ulMax = pAvg->pDeltas[pAvg->uwCurrDelta];
-	if(pAvg->pDeltas[pAvg->uwCurrDelta] < pAvg->ulMin)
-		pAvg->ulMin = pAvg->pDeltas[pAvg->uwCurrDelta];
-	++pAvg->uwCurrDelta;
-	// Roll 
-	if(pAvg->uwCurrDelta == pAvg->uwCount)
-		pAvg->uwCurrDelta = 0;
-}
-
-/**
- *
- */
-void _logAvgWrite(tAvg *pAvg) {
-	UWORD i;
-	ULONG ulAvg;
-	char szAvg[15];
-	char szMin[15];
-	char szMax[15];
-	
-	// Calculate average time
-	for(i = pAvg->uwCount; i--;)
-		ulAvg += pAvg->pDeltas[i];
-	ulAvg /= pAvg->uwCount;
-	
-	// Display info
-	timerFormatPrec(szAvg, ulAvg);
-	timerFormatPrec(szMin, pAvg->ulMin);
-	timerFormatPrec(szMax, pAvg->ulMax);
-	logWrite("Avg %s: %s, min: %s, max: %s\n", pAvg->szName, szAvg, szMin, szMax);
-}
-
-// Copperlist debug
-void _logUCopList(struct UCopList *pUCopList) {
-	logBlockBegin("logUCopList(pUCopList: %p)", pUCopList);
-	logWrite("Next: %p\n", pUCopList->Next);
-	logWrite("FirstCopList: %p\n", pUCopList->FirstCopList);
-	logWrite("CopList: %p\n", pUCopList->CopList);
-	
-	logBlockBegin("pUCopList->CopList");
-	logWrite("Next: %p\n", pUCopList->CopList->Next);
-	logWrite("_CopList: %p\n", pUCopList->CopList->_CopList);
-	logWrite("_ViewPort: %p\n", pUCopList->CopList->_ViewPort);
-	logWrite("CopIns: %p\n", pUCopList->CopList->CopIns);
-	logWrite("CopPtr: %p\n", pUCopList->CopList->CopPtr);
-	logWrite("CopLStart: %p\n", pUCopList->CopList->CopLStart);
-	logWrite("CopSStart: %p\n", pUCopList->CopList->CopSStart);
-	logWrite("Count: %u\n", pUCopList->CopList->Count);
-	logWrite("MaxCount: %u\n", pUCopList->CopList->MaxCount);
-	logWrite("DyOffset: %u\n", pUCopList->CopList->DyOffset);
-	logBlockEnd("pUCopList->CopList");
-	
-	logBlockEnd("logUCopList()");
-}
-
-void _logBitMap(struct BitMap *pBitMap) {
-	UBYTE i;
-	logBlockBegin("logBitMap(pBitMap: %p)", pBitMap);
-	logWrite("BytesPerRow: %u\n", pBitMap->BytesPerRow);
-	logWrite("Rows: %u\n", pBitMap->Rows);
-	logWrite("Flags: %hu\n", pBitMap->Flags);
-	logWrite("Depth: %hu\n", pBitMap->Depth);
-	logWrite("pad: %u\n", pBitMap->pad);
-	// since Planes is always 8-long, dump all its entries
-	for(i = 0; i != 8; ++i)
-		logWrite("Planes[%hu]: %p\n", i, pBitMap->Planes[i]);
-	logBlockEnd("logBitMap");
-}
-#endif
+#endif /* end of GAME_DEBUG */
