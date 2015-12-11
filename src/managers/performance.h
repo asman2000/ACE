@@ -1,7 +1,22 @@
 #ifndef ACE_PERFORMANCE_LOG_H
 #define ACE_PERFORMANCE_LOG_H
 
+#include "config.h"
+
+#ifndef GAME_DEBUG
+	/* release */
+
+#define logAvgCreate(szName, wCount)
+#define logAvgDestroy(pAvg)
+#define logAvgBegin(pAvg)
+#define logAvgEnd(pAvg)
+#define logAvgWrite(pAvg)
+
+#else	/* GAME_DEBUG */
+	/* debug */
+
 #include <exec/types.h>
+
 
 typedef struct {
 	UWORD uwCount;
@@ -21,18 +36,6 @@ void logAvgBegin(tAvg* pAvg);
 void logAvgEnd(tAvg* pAvg);
 void logAvgWrite(tAvg* pAvg);
 
-/* performance */
-
-
-
-#else
-
-#define logAvgCreate(szName, wCount)
-#define logAvgDestroy(pAvg)
-#define logAvgBegin(pAvg)
-#define logAvgEnd(pAvg)
-#define logAvgWrite(pAvg)
-
-
+#endif /* enf of GAME_DEBUG */
 
 #endif /* end of ACE_PERFORMANCE_LOG_H */
